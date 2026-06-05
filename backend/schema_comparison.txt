@@ -1,0 +1,52 @@
+=== SCHEMA COMPARISON: POSTGRESQL VS POWER BI EXPECTATIONS ===
+
+Table: dim_customer
+  PostgreSQL Columns: ['ma_khach_hang', 'customer_id', 'ten_khach_hang', 'customer_name', 'nhom_khach_hang', 'customer_group', 'kenh_khach_hang', 'channel', 'ten_tinh', 'province', 'ten_vung', 'mien', 'staff_id']
+  Power BI Expects:   ['customer_id', 'customer_name', 'customer_group', 'channel', 'province', 'staff_id']
+  ℹ️ Extra in PG (not expected by PBI): ['ma_khach_hang', 'ten_khach_hang', 'nhom_khach_hang', 'kenh_khach_hang', 'ten_tinh', 'ten_vung', 'mien']
+  ✅ Schema matches perfectly!
+
+Table: dim_date
+  PostgreSQL Columns: ['date_key', 'full_date', 'nam', 'quy', 'thang', 'ten_thang', 'tuan_trong_nam', 'ngay', 'thu_trong_tuan', 'ten_thu', 'loai_ngay', 'thang_nam', 'quy_nam']
+  Power BI Expects:   ['date_key', 'full_date', 'nam', 'quy', 'thang', 'ten_thang', 'tuan_trong_nam', 'ngay', 'thu_trong_tuan', 'ten_thu', 'loai_ngay', 'thang_nam', 'quy_nam']
+  ✅ Schema matches perfectly!
+
+Table: dim_npp
+  PostgreSQL Columns: ['ma_npp', 'npp_id', 'ten_npp', 'npp_name', 'ma_phu_npp', 'dia_chi_npp', 'address', 'ten_mien', 'region', 'ten_vung', 'area', 'tinh_npp', 'province', 'phuong_xa', 'office', 'asm_phu_trach', 'asm_name', 'ss_phu_trach', 'sup_name', 'sr_phu_trach', 'ma_phu_nhan_vien']
+  Power BI Expects:   ['npp_id', 'npp_name', 'region', 'area', 'province', 'address', 'asm_name', 'sup_name']
+  ℹ️ Extra in PG (not expected by PBI): ['ma_npp', 'ten_npp', 'ma_phu_npp', 'dia_chi_npp', 'ten_mien', 'ten_vung', 'tinh_npp', 'phuong_xa', 'office', 'asm_phu_trach', 'ss_phu_trach', 'sr_phu_trach', 'ma_phu_nhan_vien']
+  ✅ Schema matches perfectly!
+
+Table: dim_product
+  PostgreSQL Columns: ['ma_san_pham', 'ten_san_pham', 'dien_giai', 'ten_viet_tat', 'ma_nganh_hang', 'nganh_hang_import_inhouse', 'nganh_hang', 'nhan_hang_d_m_k', 'nhan_hang', 'ma_nhom_hang_cat', 'nhom_hang_cat', 'nhom_hang', 'ma_ph1', 'ph1', 'phan_loai_1', 'ma_ph2', 'ph2', 'phan_loai_2', 'don_vi_luu_kho', 'so_luong_thung', 'trang_thai']
+  Power BI Expects:   ['ma_nganh_hang', 'nganh_hang_import_inhouse', 'nhan_hang_d_m_k', 'ma_nhom_hang_cat', 'nhom_hang_cat', 'ma_ph1', 'ph1', 'ma_ph2', 'ph2', 'ma_san_pham', 'dien_giai', 'ten_viet_tat', 'don_vi_luu_kho', 'so_luong_thung', 'trang_thai']
+  ℹ️ Extra in PG (not expected by PBI): ['ten_san_pham', 'nganh_hang', 'nhan_hang', 'nhom_hang', 'phan_loai_1', 'phan_loai_2']
+  ✅ Schema matches perfectly!
+
+Table: dim_salesforce
+  PostgreSQL Columns: ['ma_nv', 'staff_id', 'ten_nhan_vien', 'staff_name', 'sup_id', 'ten_gsbh', 'sup_name', 'asm_id', 'ten_ql_vung', 'asm_name', 'ten_mien', 'ten_vung']
+  Power BI Expects:   ['staff_id', 'staff_name', 'sup_id', 'sup_name', 'asm_id', 'asm_name']
+  ℹ️ Extra in PG (not expected by PBI): ['ma_nv', 'ten_nhan_vien', 'ten_gsbh', 'ten_ql_vung', 'ten_mien', 'ten_vung']
+  ✅ Schema matches perfectly!
+
+Table: dim_territory
+  PostgreSQL Columns: ['ma_dat_nuoc', 'ten_dat_nuoc', 'ma_mien', 'ten_mien', 'ma_vung', 'ten_vung', 'ma_tinh', 'ten_tinh', 'ten_quan_huyen', 'ten_phuong_xa', 'dia_chi_day_du', 'location_key']
+  Power BI Expects:   ['ma_tinh', 'ten_tinh', 'ten_quan_huyen', 'ten_phuong_xa', 'dia_chi_day_du', 'ma_dat_nuoc', 'ten_dat_nuoc', 'ma_mien', 'ten_mien', 'ma_vung', 'ten_vung', 'location_key']
+  ✅ Schema matches perfectly!
+
+Table: fact_kpi
+  PostgreSQL Columns: ['ngay_thang', 'staff_id', 'staff_name', 'npp_id', 'npp_name', 'ten_mien', 'ten_vung', 'tinh_npp', 'ten_ql_vung', 'ten_gsbh', 'ma_kpi', 'kpi_name', 'category', 'target', 'actual', 'db_pct_rate']
+  Power BI Expects:   ['staff_id', 'npp_id', 'kpi_name', 'target', 'actual', 'ngay_thang', 'category', 'staff_name', 'npp_name', 'ten_mien', 'ten_vung', 'tinh_npp', 'ten_ql_vung', 'ten_gsbh', 'ma_kpi', 'db_pct_rate']
+  ✅ Schema matches perfectly!
+
+Table: fact_sellin
+  PostgreSQL Columns: ['ngay', 'date_key', 'ma_npp', 'npp_id', 'ma_san_pham', 'product_id', 'doanh_thu', 'revenue_in']
+  Power BI Expects:   ['date_key', 'npp_id', 'product_id', 'revenue_in']
+  ℹ️ Extra in PG (not expected by PBI): ['ngay', 'ma_npp', 'ma_san_pham', 'doanh_thu']
+  ✅ Schema matches perfectly!
+
+Table: fact_sellout
+  PostgreSQL Columns: ['ngay', 'date_key', 'ma_npp', 'npp_id', 'ma_khach_hang', 'ma_kh', 'ma_san_pham', 'product_id', 'ma_nhan_vien', 'staff_id', 'nhan_vien', 'giam_sat', 'so_luong', 'qty', 'doanh_so', 'doanh_thu_thuan', 'revenue', 'ten_vung', 'ten_mien']
+  Power BI Expects:   ['ma_kh', 'product_id', 'staff_id', 'npp_id', 'date_key', 'qty', 'revenue']
+  ℹ️ Extra in PG (not expected by PBI): ['ngay', 'ma_npp', 'ma_khach_hang', 'ma_san_pham', 'ma_nhan_vien', 'nhan_vien', 'giam_sat', 'so_luong', 'doanh_so', 'doanh_thu_thuan', 'ten_vung', 'ten_mien']
+  ✅ Schema matches perfectly!
