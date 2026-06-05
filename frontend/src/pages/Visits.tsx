@@ -43,15 +43,22 @@ interface VisitsProps {
   apiUrl: string;
   selectedVisitId: number | null;
   setSelectedVisitId: (id: number | null) => void;
+  staticVisitDetails?: Record<number, DetailedVisitResponse>;
 }
 
-export const Visits: React.FC<VisitsProps> = ({ visits, apiUrl, selectedVisitId, setSelectedVisitId }) => {
+export const Visits: React.FC<VisitsProps> = ({ visits, apiUrl, selectedVisitId, setSelectedVisitId, staticVisitDetails }) => {
   const [detailedVisit, setDetailedVisit] = useState<DetailedVisitResponse | null>(null);
   const [loadingDetail, setLoadingDetail] = useState(false);
 
   // Fetch visit details when selectedVisitId changes
   useEffect(() => {
     if (selectedVisitId) {
+      if (staticVisitDetails?.[selectedVisitId]) {
+        setDetailedVisit(staticVisitDetails[selectedVisitId]);
+        setLoadingDetail(false);
+        return;
+      }
+
       setLoadingDetail(true);
       fetch(`${apiUrl}/api/visits/${selectedVisitId}`)
         .then(res => res.json())
@@ -66,7 +73,7 @@ export const Visits: React.FC<VisitsProps> = ({ visits, apiUrl, selectedVisitId,
     } else {
       setDetailedVisit(null);
     }
-  }, [selectedVisitId, apiUrl]);
+  }, [selectedVisitId, apiUrl, staticVisitDetails]);
 
   const handleExportVisits = () => {
     exportToExcel(

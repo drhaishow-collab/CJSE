@@ -3,9 +3,11 @@ import React, { useState } from 'react';
 interface LoginProps {
   onLoginSuccess: (user: any) => void;
   apiUrl: string;
+  staticMode?: boolean;
+  demoUser?: any;
 }
 
-export const Login: React.FC<LoginProps> = ({ onLoginSuccess, apiUrl }) => {
+export const Login: React.FC<LoginProps> = ({ onLoginSuccess, apiUrl, staticMode = false, demoUser }) => {
   const [employeeCode, setEmployeeCode] = useState('');
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
@@ -14,6 +16,17 @@ export const Login: React.FC<LoginProps> = ({ onLoginSuccess, apiUrl }) => {
     e.preventDefault();
     if (!employeeCode.trim()) {
       setError('Vui lòng nhập mã nhân sự.');
+      return;
+    }
+
+    if (staticMode) {
+      onLoginSuccess({
+        ...(demoUser || {}),
+        username: employeeCode.trim(),
+        code: employeeCode.trim(),
+        name: demoUser?.name || employeeCode.trim(),
+        full_name: demoUser?.full_name || employeeCode.trim(),
+      });
       return;
     }
 

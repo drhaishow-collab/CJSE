@@ -9,8 +9,22 @@ import { Login } from './pages/Login';
 import { KpiDocs } from './pages/KpiDocs';
 import { ReportFormsLab } from './pages/ReportFormsLab';
 import { SellInTestDashboard } from './pages/SellInTestDashboard';
+import {
+  STATIC_BIZ_REPORT,
+  STATIC_DASHBOARD,
+  STATIC_DEMO_USER,
+  STATIC_PRODUCT_REPORT,
+  STATIC_SF_REPORT,
+  STATIC_SF_TREND,
+  STATIC_STATUS,
+  STATIC_STORES,
+  STATIC_USERS,
+  STATIC_VISIT_DETAILS,
+  STATIC_VISITS,
+} from './staticData';
 
-const API_URL = 'http://localhost:3001';
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001';
+const STATIC_MODE = (import.meta.env.VITE_STATIC_MODE || 'true') === 'true';
 const CACHE_TTL = 5 * 60 * 1000; // 5 minutes
 
 const normalizeUserRole = (role?: string) => {
@@ -157,6 +171,20 @@ function App() {
     if (!currentUser) return;
     setLoading(true);
 
+    if (STATIC_MODE) {
+      setDbStatus(STATIC_STATUS);
+      setDashboardData(STATIC_DASHBOARD);
+      setStores(STATIC_STORES as any);
+      setVisits(STATIC_VISITS as any);
+      setUsersList(STATIC_USERS as any);
+      setProductReport(STATIC_PRODUCT_REPORT as any);
+      setSfReport(STATIC_SF_REPORT as any);
+      setBizReport(STATIC_BIZ_REPORT as any);
+      setSfTrend(STATIC_SF_TREND as any);
+      setLoading(false);
+      return;
+    }
+
     try {
       const authQuery = getAuthQuery();
 
@@ -225,7 +253,7 @@ function App() {
 
   // Background preloading - runs after login, refreshes all caches silently
   const preloadAllData = async () => {
-    if (!currentUser) return;
+    if (!currentUser || STATIC_MODE) return;
     setPrecaching(true);
 
     const endpoints = [
@@ -314,7 +342,10 @@ function App() {
 
   // Reports refetch with cache-bust for fresh data
   useEffect(() => {
-    if (!currentUser) return;
+    if (!currentUser || STATIC_MODE) {
+      if (STATIC_MODE) setReportsLoading(false);
+      return;
+    }
     const authQuery = getAuthQuery();
     let queryParams = authQuery;
     if (reportYear !== '') queryParams += `&year=${reportYear}`;
@@ -340,6 +371,12 @@ function App() {
   }, [reportYear, reportMonth, reportRegion, reportArea, reportNpp, currentUser]);
 
   const handleAddStore = async (storeData: Omit<Store, 'id'>) => {
+    if (STATIC_MODE) {
+      const newStore = { id: Date.now(), ...storeData } as Store;
+      setStores(prev => [newStore, ...prev]);
+      return;
+    }
+
     const response = await fetch(`${API_URL}/api/stores`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -361,6 +398,11 @@ function App() {
   };
 
   const handleAddUser = async (userData: UserManagementItem) => {
+    if (STATIC_MODE) {
+      setUsersList(prev => [userData, ...prev]);
+      return;
+    }
+
     const response = await fetch(`${API_URL}/api/users-management`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -424,7 +466,7 @@ function App() {
         return (
           <>
             {precacheBanner}
-            <Visits visits={visits} apiUrl={API_URL} selectedVisitId={selectedVisitId} setSelectedVisitId={setSelectedVisitId} />
+            <Visits visits={visits} apiUrl={API_URL} selectedVisitId={selectedVisitId} setSelectedVisitId={setSelectedVisitId} staticVisitDetails={STATIC_VISIT_DETAILS} />
           </>
         );
       case 'users':
@@ -506,7 +548,7 @@ function App() {
   };
 
   const handleLoginSuccess = (userData: any) => {
-    const normalizedUser = normalizeUser(userData);
+    const normalizedUser = normalizeUser(userData || STATIC_DEMO_USER);
     localStorage.setItem('cj_user', JSON.stringify(normalizedUser));
     setCurrentUser(normalizedUser);
   };
@@ -526,7 +568,7 @@ function App() {
   };
 
   if (!currentUser) {
-    return <Login onLoginSuccess={handleLoginSuccess} apiUrl={API_URL} />;
+    return <Login onLoginSuccess={handleLoginSuccess} apiUrl={API_URL} staticMode={STATIC_MODE} demoUser={STATIC_DEMO_USER} />;
   }
 
   return (
