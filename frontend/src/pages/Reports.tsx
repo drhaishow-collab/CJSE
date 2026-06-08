@@ -1495,9 +1495,6 @@ export const Reports: React.FC<ReportsProps> = ({
         const avgSkuOrder = totalTransactions > 0 ? totalSkuSum / totalTransactions : 0;
         const avgDropsize = totalTransactions > 0 ? totalSales / totalTransactions : 0;
 
-
-        const uniqueSups = Array.from(new Set(sfData.repsData.map(r => r.sup_name).filter(Boolean)));
-
         // 2. Region calculations
         const regionsSet = Array.from(new Set(sfData.repsData.map(r => r.region).filter(Boolean)));
         const regionsData = regionsSet.map(regName => {
@@ -1630,8 +1627,6 @@ export const Reports: React.FC<ReportsProps> = ({
             strike_rate: mcp > 0 ? (outlets / mcp) * 100 : 0
           };
         }).sort((a, b) => b.sales - a.sales);
-
-        const _maxCatSales = categoriesList[0]?.total_sales || 1;
 
         // 5. Filter reps by search query
         const filteredReps = sfData.repsData.filter(r => {
@@ -2058,7 +2053,6 @@ export const Reports: React.FC<ReportsProps> = ({
 
               const overallSellinPct = totalSellinTgt > 0 ? (totalSellinAct / totalSellinTgt) * 100 : 0;
               const overallSelloutPct = totalSelloutTgt > 0 ? (totalSelloutAct / totalSelloutTgt) * 100 : 0;
-              const _overallActivePct = totalMcpCount > 0 ? (totalOutletsCount / totalMcpCount) * 100 : 0;
               const overallAso = totalOutletsCount;
               const overallVpo = totalOutletsCount > 0 ? totalSalesVol / totalOutletsCount : 0;
               const overallSkuOrder = totalTxnsCount > 0 ? totalSkuCount / totalTxnsCount : 0;
@@ -2147,7 +2141,6 @@ export const Reports: React.FC<ReportsProps> = ({
 
                               const sellinPct = node.sellin_target > 0 ? (node.sellin_actual / node.sellin_target) * 100 : 0;
                               const selloutPct = node.sellout_target > 0 ? (node.sellout_actual / node.sellout_target) * 100 : 0;
-                              const _activePct = node.mcp_count > 0 ? (node.buying_outlets / node.mcp_count) * 100 : 0;
                               const nodeAso = node.buying_outlets;
                               const nodeVpo = node.buying_outlets > 0 ? node.sales / node.buying_outlets : 0;
                               const nodeSkuOrder = node.transactions > 0 ? node.sku_sum / node.transactions : 0;
@@ -2643,9 +2636,6 @@ export const Reports: React.FC<ReportsProps> = ({
                     };
 
                     const metric = sfTrendMetric;
-                    const _metricColors: Record<string, string> = {
-                      sellin: '#3b82f6', sellout: '#f97316', aso: '#ef4444', mcp: '#10b981'
-                    };
                     const regionColors = ['#3b82f6', '#f97316', '#10b981', '#8b5cf6'];
 
                     const isRevenue = metric === 'sellin' || metric === 'sellout';
@@ -2706,8 +2696,8 @@ export const Reports: React.FC<ReportsProps> = ({
                         {/* KPI summary row */}
                         <div style={{ display: 'flex', gap: '1rem', marginBottom: '0.75rem', flexWrap: 'wrap' }}>
                           {regionsForTrend.map((r: string, ri: number) => {
-                            const totalActual = months.reduce((s, m) => s + getBarVal(metric, r, m), 0);
-                            const totalTarget = months.reduce((s, m) => s + getTarget(metric, r, m), 0);
+                            const totalActual = months.reduce((s: number, m: number) => s + getBarVal(metric, r, m), 0);
+                            const totalTarget = months.reduce((s: number, m: number) => s + getTarget(metric, r, m), 0);
                             const pct = getPct(totalActual, totalTarget);
                             const color = regionColors[ri % regionColors.length];
                             return (

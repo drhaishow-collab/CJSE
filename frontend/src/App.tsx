@@ -115,17 +115,7 @@ const cacheManager = {
   },
 };
 
-async function _cachedFetch(url: string, cacheKey: string): Promise<{ data: any; fromCache: boolean }> {
-  const cached = cacheManager.get(cacheKey);
-  if (cached) {
-    return { data: cached.data, fromCache: true };
-  }
-  const res = await fetch(url);
-  if (!res.ok) throw new Error(`HTTP ${res.status}`);
-  const data = await res.json();
-  cacheManager.set(cacheKey, data);
-  return { data, fromCache: false };
-}
+// App component starts below
 
 function App() {
   const [currentTab, setTab] = useState<string>('dashboard');

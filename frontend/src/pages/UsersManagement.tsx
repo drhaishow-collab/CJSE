@@ -143,7 +143,7 @@ export const UsersManagement: React.FC<UsersProps> = ({ usersData, onAddUser, cu
 
   // Role-based display: which managers + sups to show
   const getVisibleManagers = () => {
-    const all = Object.entries(orgTree).map(([code, data]) => ({ code, ...data }));
+    const all = Object.entries(orgTree).map(([mgrCode, data]) => ({ ...data, code: mgrCode }));
 
     if (currentUser?.role === 'manager') {
       const code = currentUser.code;
