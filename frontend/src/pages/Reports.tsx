@@ -1556,38 +1556,7 @@ export const Reports: React.FC<ReportsProps> = ({
 
         // Build categoriesList: merge revenue-based categories with kpi-based data
         const allCategories = Object.keys(catSalesMap);
-        const categoriesList = allCategories.length > 0
-          ? allCategories.map(cat => {
-              const sales = catSalesMap[cat] || { revenue: 0 };
-              const kpis = catKpisMap[cat] || { sellin_actual: 0, sellin_target: 0, sellout_target: 0 };
-              const sellin_act = kpis.sellin_actual;
-              const sellout_act = sales.revenue;
-              const total_sales = sellout_act > 0 ? sellout_act : sellin_act;
-
-              return {
-                category: cat,
-                sellin_target: kpis.sellin_target,
-                sellin_actual: sellin_act,
-                sellin_pct: kpis.sellin_target > 0 ? (sellin_act / kpis.sellin_target) * 100 : 0,
-                sellout_target: kpis.sellout_target,
-                sellout_actual: sellout_act,
-                sellout_pct: kpis.sellout_target > 0 ? (sellout_act / kpis.sellout_target) * 100 : 0,
-                total_sales
-              };
-            }).sort((a, b) => b.total_sales - a.total_sales)
-          : Object.keys(catKpisMap).map(cat => {
-              const kpis = catKpisMap[cat];
-              return {
-                category: cat,
-                sellin_target: kpis.sellin_target,
-                sellin_actual: kpis.sellin_actual,
-                sellin_pct: kpis.sellin_target > 0 ? (kpis.sellin_actual / kpis.sellin_target) * 100 : 0,
-                sellout_target: kpis.sellout_target,
-                sellout_actual: 0,
-                sellout_pct: 0,
-                total_sales: kpis.sellin_actual
-              };
-            }).sort((a, b) => b.total_sales - a.total_sales);
+        void allCategories; // preserve for future category report expansion
 
         // 4. Area calculations
         const areasSet = Array.from(new Set(sfData.repsData.map(r => r.area).filter(Boolean)));
