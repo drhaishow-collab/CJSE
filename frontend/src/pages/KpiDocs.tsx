@@ -4,7 +4,6 @@ export const KpiDocs: React.FC = () => {
   // Playground state
   const [sales, setSales] = useState<number>(150000000);
   const [asoInput, setAsoInput] = useState<number>(35);
-  const [visits, setVisits] = useState<number>(200);
   const [transactions, setTransactions] = useState<number>(120);
   const [skuSum, setSkuSum] = useState<number>(240);
   const [mcp, setMcp] = useState<number>(50);

@@ -1492,15 +1492,11 @@ export const Reports: React.FC<ReportsProps> = ({
         const totalSkuSum = sfData.repsData.reduce((sum, r) => sum + (r.sku_sum || 0), 0);
 
 
-        const avgASO = totalOutlets > 0 ? totalSales / totalOutlets : 0;
-        const avgVPO = totalVisits > 0 ? (totalTransactions / totalVisits) * 100 : 0;
         const avgSkuOrder = totalTransactions > 0 ? totalSkuSum / totalTransactions : 0;
         const avgDropsize = totalTransactions > 0 ? totalSales / totalTransactions : 0;
 
 
         const uniqueSups = Array.from(new Set(sfData.repsData.map(r => r.sup_name).filter(Boolean)));
-        const totalSups = uniqueSups.length;
-        const totalReps = sfData.repsData.length;
 
         // 2. Region calculations
         const regionsSet = Array.from(new Set(sfData.repsData.map(r => r.region).filter(Boolean)));
@@ -1635,7 +1631,7 @@ export const Reports: React.FC<ReportsProps> = ({
           };
         }).sort((a, b) => b.sales - a.sales);
 
-        const maxCatSales = categoriesList[0]?.total_sales || 1;
+        const _maxCatSales = categoriesList[0]?.total_sales || 1;
 
         // 5. Filter reps by search query
         const filteredReps = sfData.repsData.filter(r => {
@@ -2062,7 +2058,7 @@ export const Reports: React.FC<ReportsProps> = ({
 
               const overallSellinPct = totalSellinTgt > 0 ? (totalSellinAct / totalSellinTgt) * 100 : 0;
               const overallSelloutPct = totalSelloutTgt > 0 ? (totalSelloutAct / totalSelloutTgt) * 100 : 0;
-              const overallActivePct = totalMcpCount > 0 ? (totalOutletsCount / totalMcpCount) * 100 : 0;
+              const _overallActivePct = totalMcpCount > 0 ? (totalOutletsCount / totalMcpCount) * 100 : 0;
               const overallAso = totalOutletsCount;
               const overallVpo = totalOutletsCount > 0 ? totalSalesVol / totalOutletsCount : 0;
               const overallSkuOrder = totalTxnsCount > 0 ? totalSkuCount / totalTxnsCount : 0;
@@ -2151,7 +2147,7 @@ export const Reports: React.FC<ReportsProps> = ({
 
                               const sellinPct = node.sellin_target > 0 ? (node.sellin_actual / node.sellin_target) * 100 : 0;
                               const selloutPct = node.sellout_target > 0 ? (node.sellout_actual / node.sellout_target) * 100 : 0;
-                              const activePct = node.mcp_count > 0 ? (node.buying_outlets / node.mcp_count) * 100 : 0;
+                              const _activePct = node.mcp_count > 0 ? (node.buying_outlets / node.mcp_count) * 100 : 0;
                               const nodeAso = node.buying_outlets;
                               const nodeVpo = node.buying_outlets > 0 ? node.sales / node.buying_outlets : 0;
                               const nodeSkuOrder = node.transactions > 0 ? node.sku_sum / node.transactions : 0;
@@ -2628,7 +2624,7 @@ export const Reports: React.FC<ReportsProps> = ({
 
                   {(() => {
                     const months = sfTrend?.months || [1, 2, 3, 4, 5];
-                    const monthLabels = months.map(m => `T${m}`);
+                    const monthLabels = months.map((m: number) => `T${m}`);
                     const apiRegions = Array.isArray(sfTrend?.regions) && sfTrend.regions.length > 0
                       ? sfTrend.regions : regionsSet;
                     const regionsForTrend = sfTrendRegion ? [sfTrendRegion] : apiRegions;
@@ -2647,7 +2643,7 @@ export const Reports: React.FC<ReportsProps> = ({
                     };
 
                     const metric = sfTrendMetric;
-                    const metricColors: Record<string, string> = {
+                    const _metricColors: Record<string, string> = {
                       sellin: '#3b82f6', sellout: '#f97316', aso: '#ef4444', mcp: '#10b981'
                     };
                     const regionColors = ['#3b82f6', '#f97316', '#10b981', '#8b5cf6'];
@@ -2672,7 +2668,7 @@ export const Reports: React.FC<ReportsProps> = ({
                       return 0;
                     };
 
-                    const getTarget = (metricKey: string, region: string, month: number) => {
+                    const getTarget = (metricKey: keyof typeof targetsByMetric, region: string, month: number) => {
                       return targetsByMetric[metricKey]?.[region]?.[month] || 0;
                     };
 
@@ -2682,8 +2678,8 @@ export const Reports: React.FC<ReportsProps> = ({
                     };
 
                     let maxVal = 0;
-                    regionsForTrend.forEach(r => {
-                      months.forEach(m => {
+                    regionsForTrend.forEach((r: string) => {
+                      months.forEach((m: number) => {
                         const val = getBarVal(metric, r, m);
                         const tgt = getTarget(metric, r, m);
                         if (val > maxVal) maxVal = val;
@@ -2709,7 +2705,7 @@ export const Reports: React.FC<ReportsProps> = ({
                       <div style={{ overflowX: 'auto' }}>
                         {/* KPI summary row */}
                         <div style={{ display: 'flex', gap: '1rem', marginBottom: '0.75rem', flexWrap: 'wrap' }}>
-                          {regionsForTrend.map((r, ri) => {
+                          {regionsForTrend.map((r: string, ri: number) => {
                             const totalActual = months.reduce((s, m) => s + getBarVal(metric, r, m), 0);
                             const totalTarget = months.reduce((s, m) => s + getTarget(metric, r, m), 0);
                             const pct = getPct(totalActual, totalTarget);
@@ -2747,7 +2743,7 @@ export const Reports: React.FC<ReportsProps> = ({
                           ))}
 
                           {/* Bars + target line + pct label per month per region */}
-                          {months.map((m, mi) => {
+                          {months.map((m: number, mi: number) => {
                             const filteredRegs = regionsForTrend;
                             const barW = Math.min(22, (groupW - 20) / filteredRegs.length);
                             const totalBarW = barW * filteredRegs.length;
@@ -2756,7 +2752,7 @@ export const Reports: React.FC<ReportsProps> = ({
 
                             return (
                               <g key={m}>
-                                {filteredRegs.map((r, ri) => {
+                                {filteredRegs.map((r: string, ri: number) => {
                                   const barVal = getBarVal(metric, r, m);
                                   const target = getTarget(metric, r, m);
                                   const pct = getPct(barVal, target);
@@ -2811,7 +2807,7 @@ export const Reports: React.FC<ReportsProps> = ({
                           ))}
 
                           {/* Legend */}
-                          {regionsForTrend.map((r, i) => (
+                          {regionsForTrend.map((r: string, i: number) => (
                             <g key={r} transform={`translate(${CHART_W - PAD_R - regionsForTrend.length * 90 + i * 90}, ${PAD_T - 14})`}>
                               <rect x={0} y={0} width={10} height={10} fill={regionColors[i % regionColors.length]} rx="2" />
                               <text x={14} y={9} fill="#475569" fontSize="9" fontWeight="700">{r}</text>

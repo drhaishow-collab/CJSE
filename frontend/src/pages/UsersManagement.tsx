@@ -489,7 +489,6 @@ export const UsersManagement: React.FC<UsersProps> = ({ usersData, onAddUser, cu
                     }
 
                     let prevMgr = '';
-                    let prevRegion = '';
 
                     return sortedRows.map((row: any) => {
                       const showMgr = row.mgr_name !== prevMgr;
