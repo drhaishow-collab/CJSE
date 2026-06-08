@@ -1553,6 +1553,7 @@ export const Reports: React.FC<ReportsProps> = ({
           acc[cat].sellout_target += parseFloat(curr.sellout_target) || 0;
           return acc;
         }, {} as Record<string, { category: string, sellin_actual: number, sellin_target: number, sellout_target: number }>);
+        void catKpisMap; // reserved for future category-level KPI breakdown
 
         // Build categoriesList: merge revenue-based categories with kpi-based data
         const allCategories = Object.keys(catSalesMap);
