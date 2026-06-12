@@ -117,6 +117,18 @@ const getCategoryIcon = (category: string) => {
   return '📦';
 };
 
+export const formatAreaName = (areaCode: string) => {
+  const map: Record<string, string> = {
+    'HCM': 'Hồ Chí Minh',
+    'HNI': 'Hà Nội',
+    'HPG': 'Hải Phòng',
+    'MDO': 'Miền Đông',
+    'MTAY': 'Miền Tây',
+    'MTRUNG': 'Miền Trung'
+  };
+  return map[areaCode] || areaCode;
+};
+
 export const Reports: React.FC<ReportsProps> = ({ 
   activeReportTab, 
   productData, 
@@ -207,12 +219,14 @@ export const Reports: React.FC<ReportsProps> = ({
     } = { sellin2025: 0, sellin2026: 0, sellout2025: 0, sellout2026: 0 };
 
     filtered.forEach(item => {
-      const is2025 = item.year === 2025;
-      const is2026 = item.year === 2026;
-      const currentMonth = reportMonth || 5; // Default fallback to month 5 if empty
+      const itemYear = Number(item.year);
+      const itemMonth = Number(item.month);
+      const is2025 = itemYear === 2025;
+      const is2026 = itemYear === 2026;
+      const currentMonth = Number(reportMonth) || 5; // Default fallback to month 5 if empty
 
       // YTD Calculation (months 1 up to current selected month)
-      if (item.month <= currentMonth) {
+      if (itemMonth <= currentMonth) {
         if (item.type.toLowerCase() === 'sellin') {
           if (is2025) ytd.sellin2025 += item.sales;
           if (is2026) ytd.sellin2026 += item.sales;
@@ -223,7 +237,7 @@ export const Reports: React.FC<ReportsProps> = ({
       }
 
       // MTD Calculation (only the selected month)
-      if (item.month === currentMonth) {
+      if (itemMonth === currentMonth) {
         if (item.type.toLowerCase() === 'sellin') {
           if (is2025) mtd.sellin2025 += item.sales;
           if (is2026) mtd.sellin2026 += item.sales;
@@ -1467,6 +1481,76 @@ export const Reports: React.FC<ReportsProps> = ({
                   </div>
                 </div>
 
+                {/* 6 Months Trend Mockup */}
+                <div className="pbi-card" style={{ padding: '0' }}>
+                  <div style={{ padding: '1rem 1.25rem', borderBottom: '1px solid var(--border-color)', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                    <span style={{ fontSize: '1.1rem' }}>📈</span>
+                    <span style={{ fontWeight: 800, fontSize: '0.92rem', color: '#252423' }}>Xu Hướng Doanh Số Ngành Hàng (6 Tháng Gần Nhất) - Dữ liệu mô phỏng</span>
+                  </div>
+                  <div style={{ padding: '1.5rem', display: 'flex', alignItems: 'flex-end', gap: '15px', height: '220px' }}>
+                    {[
+                      { month: 'Tháng 1', sales: 450, sellout: 420 },
+                      { month: 'Tháng 2', sales: 480, sellout: 450 },
+                      { month: 'Tháng 3', sales: 410, sellout: 430 },
+                      { month: 'Tháng 4', sales: 520, sellout: 490 },
+                      { month: 'Tháng 5', sales: 560, sellout: 530 },
+                      { month: 'Tháng 6', sales: 610, sellout: 580 }
+                    ].map((item, idx) => {
+                      const maxVal = 650;
+                      const inHeight = (item.sales / maxVal) * 100;
+                      const outHeight = (item.sellout / maxVal) * 100;
+                      return (
+                        <div key={idx} style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '8px', height: '100%' }}>
+                          <div style={{ flex: 1, display: 'flex', alignItems: 'flex-end', gap: '6px', width: '100%', justifyContent: 'center' }}>
+                            {/* Sell in bar */}
+                            <div style={{ width: '35%', height: `${inHeight}%`, background: 'var(--cj-blue)', borderRadius: '4px 4px 0 0', position: 'relative' }}>
+                               <div style={{ position: 'absolute', top: '-22px', left: '50%', transform: 'translateX(-50%)', fontSize: '0.7rem', fontWeight: 700, color: 'var(--cj-blue)' }}>{item.sales}M</div>
+                            </div>
+                            {/* Sell out bar */}
+                            <div style={{ width: '35%', height: `${outHeight}%`, background: 'var(--cj-orange)', borderRadius: '4px 4px 0 0', position: 'relative' }}>
+                               <div style={{ position: 'absolute', top: '-22px', left: '50%', transform: 'translateX(-50%)', fontSize: '0.7rem', fontWeight: 700, color: 'var(--cj-orange)' }}>{item.sellout}M</div>
+                            </div>
+                          </div>
+                          <div style={{ fontSize: '0.8rem', fontWeight: 700, color: '#605e5c' }}>{item.month}</div>
+                        </div>
+                      )
+                    })}
+                  </div>
+                  <div style={{ padding: '0.75rem 1.5rem', background: '#f8fafc', display: 'flex', gap: '1rem', justifyContent: 'center', borderTop: '1px solid var(--border-color)', fontSize: '0.75rem', fontWeight: 600 }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}><div style={{ width: '12px', height: '12px', background: 'var(--cj-blue)', borderRadius: '2px' }}></div> Sell-in (Triệu VNĐ)</div>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}><div style={{ width: '12px', height: '12px', background: 'var(--cj-orange)', borderRadius: '2px' }}></div> Sell-out (Triệu VNĐ)</div>
+                  </div>
+                </div>
+
+                {/* Product Group Heatmap Mockup */}
+                <div className="pbi-card" style={{ padding: '0' }}>
+                  <div style={{ padding: '1rem 1.25rem', borderBottom: '1px solid var(--border-color)', display: 'flex', alignItems: 'center', gap: '8px', justifyContent: 'space-between' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                      <span style={{ fontSize: '1.1rem' }}>🔥</span>
+                      <span style={{ fontWeight: 800, fontSize: '0.92rem', color: '#252423' }}>Phân Tích Tỷ Lệ Bao Phủ Nhóm Sản Phẩm (Heatmap) - Dữ liệu mô phỏng</span>
+                    </div>
+                    <div style={{ fontSize: '0.75rem', color: '#605e5c', fontWeight: 600 }}>Tỷ lệ cửa hàng có bán sản phẩm</div>
+                  </div>
+                  <div style={{ padding: '1.5rem', display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '12px' }}>
+                    {[
+                      { name: 'Xúc xích Lắc', cover: 85, color: '#22c55e', bg: '#f0fdf4' },
+                      { name: 'Xúc xích Dinh dưỡng', cover: 78, color: '#16a34a', bg: '#dcfce7' },
+                      { name: 'Chả lụa / Chả giò', cover: 88, color: '#15803d', bg: '#bbf7d0' },
+                      { name: 'Đồ viên', cover: 72, color: '#84cc16', bg: '#ecfccb' },
+                      { name: 'Thịt nguội', cover: 62, color: '#eab308', bg: '#fef9c3' },
+                      { name: 'Kim chi', cover: 55, color: '#eab308', bg: '#fef9c3' },
+                      { name: 'Thịt tươi', cover: 45, color: '#f97316', bg: '#ffedd5' },
+                      { name: 'Gia vị', cover: 30, color: '#ef4444', bg: '#fee2e2' },
+                    ].map((g, i) => (
+                       <div key={i} style={{ background: g.bg, borderRadius: '8px', padding: '1.25rem', border: `1px solid ${g.color}40`, display: 'flex', flexDirection: 'column', gap: '8px', transition: 'transform 0.2s ease', cursor: 'pointer' }} className="pbi-top-sku-card">
+                         <div style={{ fontSize: '0.85rem', fontWeight: 700, color: '#252423' }}>{g.name}</div>
+                         <div style={{ fontSize: '1.8rem', fontWeight: 800, color: g.color }}>{g.cover}%</div>
+                         <div style={{ fontSize: '0.75rem', color: '#64748b' }}>Tỷ lệ bao phủ (Coverage)</div>
+                       </div>
+                    ))}
+                  </div>
+                </div>
+
               </div>
             );
           })()}
@@ -1575,7 +1659,7 @@ export const Reports: React.FC<ReportsProps> = ({
           const selloutActual = reps.reduce((sum, r) => sum + (r.sellout_actual || 0), 0);
 
           return {
-            area: areaName,
+            area: formatAreaName(areaName),
             region: reps[0]?.region || 'Khác',
             mcp_count: mcp,
             total_visits: visits,
@@ -2759,24 +2843,120 @@ export const Reports: React.FC<ReportsProps> = ({
                             );
                           })}
 
-                          {/* Y-axis labels */}
+                          {/* ===== ACHIEVEMENT % LINE OVERLAY ===== */}
+                          {(() => {
+                            // Calculate max % for scaling the right Y-axis
+                            const pctMax = 200; // Fixed scale: 0-200%
+                            const pctLineColors = ['#1d4ed8', '#ea580c', '#059669', '#7c3aed']; // darker versions
+
+                            return regionsForTrend.map((r: string, ri: number) => {
+                              const points: { x: number; y: number; pct: number; month: number }[] = [];
+                              
+                              months.forEach((m: number, mi: number) => {
+                                const actual = getBarVal(metric, r, m);
+                                const target = getTarget(metric, r, m);
+                                if (target > 0) {
+                                  const pctVal = Math.min(pctMax, (actual / target) * 100);
+                                  const cx = PAD_L + mi * groupW + groupW / 2;
+                                  const cy = PAD_T + innerH - (pctVal / pctMax) * innerH;
+                                  points.push({ x: cx, y: cy, pct: pctVal, month: m });
+                                }
+                              });
+
+                              if (points.length < 1) return null;
+
+                              const lineColor = pctLineColors[ri % pctLineColors.length];
+                              const pathD = points.map((p, i) => `${i === 0 ? 'M' : 'L'} ${p.x} ${p.y}`).join(' ');
+
+                              return (
+                                <g key={`pct-line-${r}`}>
+                                  {/* Line path */}
+                                  <path
+                                    d={pathD}
+                                    fill="none"
+                                    stroke={lineColor}
+                                    strokeWidth="2.5"
+                                    strokeLinejoin="round"
+                                    strokeLinecap="round"
+                                    opacity="0.85"
+                                  />
+                                  {/* Data points + labels */}
+                                  {points.map((p, pi) => (
+                                    <g key={pi}>
+                                      {/* Outer circle (white border) */}
+                                      <circle cx={p.x} cy={p.y} r="5" fill="white" stroke={lineColor} strokeWidth="2" />
+                                      {/* Inner circle */}
+                                      <circle cx={p.x} cy={p.y} r="2.5" fill={lineColor} />
+                                      {/* % label above dot */}
+                                      <text
+                                        x={p.x} y={p.y - 8}
+                                        textAnchor="middle" fill={lineColor}
+                                        fontSize="8" fontWeight="800"
+                                        style={{ textShadow: '0 0 3px white, 0 0 3px white, 0 0 3px white' } as React.CSSProperties}
+                                      >
+                                        {p.pct.toFixed(0)}%
+                                      </text>
+                                      <title>{r} T{p.month}: {p.pct.toFixed(1)}% đạt</title>
+                                    </g>
+                                  ))}
+                                </g>
+                              );
+                            });
+                          })()}
+
+                          {/* 100% reference line */}
+                          {(() => {
+                            const pctMax = 200;
+                            const y100 = PAD_T + innerH - (100 / pctMax) * innerH;
+                            return (
+                              <line
+                                x1={PAD_L} y1={y100}
+                                x2={CHART_W - PAD_R} y2={y100}
+                                stroke="#dc2626" strokeWidth="1" strokeDasharray="6,3" opacity="0.4"
+                              />
+                            );
+                          })()}
+
+                          {/* Right Y-axis labels (% scale) */}
+                          {[0, 50, 100, 150, 200].map(pctVal => {
+                            const pctMax = 200;
+                            const y = PAD_T + innerH - (pctVal / pctMax) * innerH;
+                            return (
+                              <text key={pctVal} x={CHART_W - PAD_R + 6} y={y + 3} textAnchor="start" fill="#94a3b8" fontSize="8" fontWeight="600">
+                                {pctVal}%
+                              </text>
+                            );
+                          })}
+
+                          {/* Y-axis labels (left - value) */}
                           {yLabels.map((yl, i) => (
                             <text key={i} x={PAD_L - 6} y={yl.y + 4} textAnchor="end" fill="#94a3b8" fontSize="9" fontWeight="600">
                               {yl.label}
                             </text>
                           ))}
 
-                          {/* Legend */}
+                          {/* Legend - regions */}
                           {regionsForTrend.map((r: string, i: number) => (
-                            <g key={r} transform={`translate(${CHART_W - PAD_R - regionsForTrend.length * 90 + i * 90}, ${PAD_T - 14})`}>
+                            <g key={r} transform={`translate(${PAD_L + i * 120}, ${PAD_T - 14})`}>
                               <rect x={0} y={0} width={10} height={10} fill={regionColors[i % regionColors.length]} rx="2" />
                               <text x={14} y={9} fill="#475569" fontSize="9" fontWeight="700">{r}</text>
                             </g>
                           ))}
-                          {/* Target line legend */}
-                          <g transform={`translate(${CHART_W - PAD_R - 80}, ${PAD_T - 14})`}>
+                          {/* Legend - achievement line */}
+                          <g transform={`translate(${PAD_L + regionsForTrend.length * 120}, ${PAD_T - 14})`}>
+                            <line x1={0} y1={5} x2={18} y2={5} stroke="#1d4ed8" strokeWidth="2.5" />
+                            <circle cx={9} cy={5} r="3" fill="white" stroke="#1d4ed8" strokeWidth="1.5" />
+                            <text x={22} y={9} fill="#475569" fontSize="9" fontWeight="700">% Đạt</text>
+                          </g>
+                          {/* Legend - target dashed */}
+                          <g transform={`translate(${PAD_L + regionsForTrend.length * 120 + 70}, ${PAD_T - 14})`}>
                             <line x1={0} y1={5} x2={14} y2={5} stroke="#94a3b8" strokeWidth="1.5" strokeDasharray="3,2" />
                             <text x={18} y={9} fill="#94a3b8" fontSize="9" fontWeight="600">Target</text>
+                          </g>
+                          {/* Legend - 100% reference */}
+                          <g transform={`translate(${PAD_L + regionsForTrend.length * 120 + 140}, ${PAD_T - 14})`}>
+                            <line x1={0} y1={5} x2={14} y2={5} stroke="#dc2626" strokeWidth="1" strokeDasharray="6,3" opacity="0.5" />
+                            <text x={18} y={9} fill="#dc2626" fontSize="9" fontWeight="600" opacity="0.7">100%</text>
                           </g>
                         </svg>
                       </div>
@@ -3215,7 +3395,7 @@ export const Reports: React.FC<ReportsProps> = ({
 
               return {
                 id: `area:${regKey}:${areaKey}`,
-                name: areaKey,
+                name: formatAreaName(areaKey),
                 level: 'area' as const,
                 region: regKey,
                 area: areaKey,
@@ -3385,7 +3565,7 @@ export const Reports: React.FC<ReportsProps> = ({
                 >
                   <option value="">Tất cả khu vực</option>
                   {areasList.map(a => (
-                    <option key={a} value={a}>{a}</option>
+                    <option key={a} value={a}>{formatAreaName(a)}</option>
                   ))}
                 </select>
               </div>

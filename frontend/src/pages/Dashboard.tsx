@@ -144,6 +144,98 @@ export const Dashboard: React.FC<DashboardProps> = ({ data, setTab, setSelectedV
         </div>
       </div>
 
+      {/* Coverage & Market Penetration (Mock Data) */}
+      <div className="card" style={{ marginBottom: '2rem' }}>
+        <h2 className="panel-title">Độ Phủ Điểm Bán (Coverage) & Kênh Phân Phối (Mockup)</h2>
+        
+        <div style={{ display: 'flex', gap: '1.5rem', flexWrap: 'wrap' }}>
+          {/* Overall POS Coverage */}
+          <div style={{ flex: '1 1 300px', border: '1px solid var(--border-color)', borderRadius: '8px', padding: '1.5rem', background: '#ffffff' }}>
+            <h3 style={{ fontSize: '1rem', marginBottom: '1rem', color: '#252423' }}>Tổng quan Điểm bán (ASO)</h3>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'end', marginBottom: '0.5rem' }}>
+              <div>
+                <div style={{ fontSize: '2rem', fontWeight: 800, color: 'var(--cj-blue)', lineHeight: 1 }}>112,500</div>
+                <div style={{ fontSize: '0.85rem', color: '#605e5c', marginTop: '4px' }}>Điểm bán đang hoạt động / 150,000 (Tổng)</div>
+              </div>
+              <div style={{ fontSize: '1.5rem', fontWeight: 800, color: '#10b981' }}>75%</div>
+            </div>
+            <div style={{ width: '100%', height: '8px', background: '#e2e8f0', borderRadius: '4px', overflow: 'hidden', marginTop: '1rem' }}>
+              <div style={{ width: '75%', height: '100%', background: '#10b981' }}></div>
+            </div>
+            <div style={{ marginTop: '1.5rem', fontSize: '0.8rem', color: '#605e5c', display: 'flex', justifyContent: 'space-between' }}>
+              <span>Hoạt động trên tuyến: <strong>95%</strong></span>
+              <span>Off-route: <strong>5%</strong></span>
+            </div>
+          </div>
+
+          {/* By Channel */}
+          <div style={{ flex: '1 1 300px', border: '1px solid var(--border-color)', borderRadius: '8px', padding: '1.5rem', background: '#ffffff' }}>
+            <h3 style={{ fontSize: '1rem', marginBottom: '1rem', color: '#252423' }}>Phân bổ theo Kênh (Channel)</h3>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+              {[
+                { name: 'GT (General Trade)', pct: 85, color: '#3b82f6' },
+                { name: 'MT (Modern Trade)', pct: 10, color: '#f97316' },
+                { name: 'KR + DTC', pct: 2, color: '#8b5cf6' },
+                { name: 'B2B', pct: 2, color: '#10b981' },
+                { name: 'ECOM', pct: 1, color: '#ec4899' },
+              ].map(ch => (
+                <div key={ch.name} style={{ display: 'flex', alignItems: 'center', fontSize: '0.8rem' }}>
+                  <div style={{ width: '130px', fontWeight: 600 }}>{ch.name}</div>
+                  <div style={{ flex: 1, height: '6px', background: '#f1f5f9', borderRadius: '3px', margin: '0 10px', overflow: 'hidden' }}>
+                    <div style={{ width: `${ch.pct}%`, height: '100%', background: ch.color }}></div>
+                  </div>
+                  <div style={{ width: '35px', textAlign: 'right', fontWeight: 700 }}>{ch.pct}%</div>
+                </div>
+              ))}
+            </div>
+          </div>
+          
+          {/* By Region/Area */}
+          <div style={{ flex: '1 1 300px', border: '1px solid var(--border-color)', borderRadius: '8px', padding: '1.5rem', background: '#ffffff' }}>
+            <h3 style={{ fontSize: '1rem', marginBottom: '1rem', color: '#252423' }}>Phân bổ theo Khu vực</h3>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+              {[
+                { name: 'Hồ Chí Minh', val: 33750, pct: 30, color: '#eab308' },
+                { name: 'Hà Nội', val: 28125, pct: 25, color: '#06b6d4' },
+                { name: 'Cần Thơ', val: 16875, pct: 15, color: '#84cc16' },
+                { name: 'Đà Nẵng', val: 11250, pct: 10, color: '#f43f5e' },
+                { name: 'Khác', val: 22500, pct: 20, color: '#94a3b8' },
+              ].map(ar => (
+                <div key={ar.name} style={{ display: 'flex', alignItems: 'center', fontSize: '0.8rem' }}>
+                  <div style={{ width: '100px', fontWeight: 600 }}>{ar.name}</div>
+                  <div style={{ flex: 1, height: '6px', background: '#f1f5f9', borderRadius: '3px', margin: '0 10px', overflow: 'hidden' }}>
+                    <div style={{ width: `${ar.pct}%`, height: '100%', background: ar.color }}></div>
+                  </div>
+                  <div style={{ width: '50px', textAlign: 'right', fontWeight: 700 }}>{ar.val.toLocaleString()}</div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* By Category */}
+          <div style={{ flex: '1 1 300px', border: '1px solid var(--border-color)', borderRadius: '8px', padding: '1.5rem', background: '#ffffff' }}>
+            <h3 style={{ fontSize: '1rem', marginBottom: '1rem', color: '#252423' }}>Độ phủ theo Ngành hàng</h3>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+              {[
+                { name: 'Nước sốt (Sauce)', pct: 40, color: '#ef4444' },
+                { name: 'Bánh/Wrap/Dumpling', pct: 30, color: '#f59e0b' },
+                { name: 'Snack/Rong biển', pct: 15, color: '#10b981' },
+                { name: 'Nước giải khát', pct: 10, color: '#3b82f6' },
+                { name: 'Kimchi', pct: 5, color: '#d946ef' },
+              ].map(cat => (
+                <div key={cat.name} style={{ display: 'flex', alignItems: 'center', fontSize: '0.8rem' }}>
+                  <div style={{ width: '130px', fontWeight: 600 }}>{cat.name}</div>
+                  <div style={{ flex: 1, height: '6px', background: '#f1f5f9', borderRadius: '3px', margin: '0 10px', overflow: 'hidden' }}>
+                    <div style={{ width: `${cat.pct}%`, height: '100%', background: cat.color }}></div>
+                  </div>
+                  <div style={{ width: '35px', textAlign: 'right', fontWeight: 700 }}>{cat.pct}%</div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+
       {/* Recent Visits */}
       <div className="card">
         <h2 className="panel-title">

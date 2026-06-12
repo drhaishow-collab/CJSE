@@ -9,6 +9,7 @@ import { Login } from './pages/Login';
 import { KpiDocs } from './pages/KpiDocs';
 import { ReportFormsLab } from './pages/ReportFormsLab';
 import { SellInTestDashboard } from './pages/SellInTestDashboard';
+import { CoachingCooler } from './pages/CoachingCooler';
 import {
   STATIC_BIZ_REPORT,
   STATIC_DASHBOARD,
@@ -533,6 +534,20 @@ function App() {
           <>
             {precacheBanner}
             <ReportFormsLab currentUser={currentUser} />
+          </>
+        );
+      case 'reports-coaching':
+        return (
+          <>
+            {precacheBanner}
+            <CoachingCooler currentUser={currentUser} defaultTab="coaching" usersList={usersList} />
+          </>
+        );
+      case 'reports-cooler':
+        return (
+          <>
+            {precacheBanner}
+            <CoachingCooler currentUser={currentUser} defaultTab="cooler" usersList={usersList} />
           </>
         );
       case 'sellin_test':

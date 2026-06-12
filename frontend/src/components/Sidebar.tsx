@@ -14,10 +14,14 @@ interface SidebarProps {
 
 export const Sidebar: React.FC<SidebarProps> = ({ currentTab, setTab, dbStatus, isSidebarOpen, onClose, currentUser, onLogout, isCollapsed, onToggleCollapse }) => {
   const [isNewGroupOpen, setIsNewGroupOpen] = useState(currentTab === 'new' || currentTab === 'sellin_test');
+  const [isCoachingGroupOpen, setIsCoachingGroupOpen] = useState(currentTab === 'reports-coaching' || currentTab === 'reports-cooler');
 
   useEffect(() => {
     if (currentTab === 'new' || currentTab === 'sellin_test') {
       setIsNewGroupOpen(true);
+    }
+    if (currentTab === 'reports-coaching' || currentTab === 'reports-cooler') {
+      setIsCoachingGroupOpen(true);
     }
   }, [currentTab]);
 
@@ -89,6 +93,37 @@ export const Sidebar: React.FC<SidebarProps> = ({ currentTab, setTab, dbStatus, 
           <span className="menu-icon">📈</span>
           <span className="menu-label">Biz Review</span>
         </button>
+
+        <div className={`sidebar-submenu-group ${isCoachingGroupOpen ? 'open' : ''} ${(currentTab === 'reports-coaching' || currentTab === 'reports-cooler') ? 'active-group' : ''}`}>
+          <button
+            className={`menu-item submenu-parent ${(currentTab === 'reports-coaching' || currentTab === 'reports-cooler') ? 'active' : ''}`}
+            onClick={() => {
+              if (isCollapsed) {
+                setTab('reports-coaching');
+                return;
+              }
+              setIsCoachingGroupOpen((prev) => !prev);
+            }}
+            data-tooltip="Coaching & Cooler"
+          >
+            <span className="menu-icon">🎓</span>
+            <span className="menu-label">Coaching & Cooler</span>
+            <span className={`submenu-arrow ${isCoachingGroupOpen ? 'open' : ''}`}>▾</span>
+          </button>
+
+          {!isCollapsed && isCoachingGroupOpen && (
+            <div className="sidebar-submenu-list">
+              <button className={`menu-item submenu-item ${currentTab === 'reports-coaching' ? 'active' : ''}`} onClick={() => setTab('reports-coaching')} data-tooltip="Coaching Tracking">
+                <span className="menu-icon">•</span>
+                <span className="menu-label">Coaching Tracking</span>
+              </button>
+              <button className={`menu-item submenu-item ${currentTab === 'reports-cooler' ? 'active' : ''}`} onClick={() => setTab('reports-cooler')} data-tooltip="Cooler Management">
+                <span className="menu-icon">•</span>
+                <span className="menu-label">Cooler Management</span>
+              </button>
+            </div>
+          )}
+        </div>
 
         <div className={`sidebar-submenu-group ${isNewGroupOpen ? 'open' : ''} ${(currentTab === 'new' || currentTab === 'sellin_test') ? 'active-group' : ''}`}>
           <button
