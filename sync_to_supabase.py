@@ -3,7 +3,7 @@ from sqlalchemy import create_engine, text
 import time
 
 LOCAL_URL = 'postgresql://postgres:123456@localhost:5432/sales_db'
-SUPABASE_URL = 'postgresql://postgres:Coke%4020152025@db.npeledlithnaolqgnuqq.supabase.co:5432/postgres'
+SUPABASE_URL = 'postgresql://postgres:SZQGiSAfvrxP1LYh@db.ibtturbotiqydypojvne.supabase.co:5432/postgres'
 
 print("="*60)
 print("    DONG BO DU LIEU TU LOCAL LEN SUPABASE (CLOUD)")

@@ -1,7 +1,7 @@
 import os
 from sqlalchemy import create_engine, text
 
-engine = create_engine('postgresql://postgres:Coke%4020152025@db.npeledlithnaolqgnuqq.supabase.co:5432/postgres')
+engine = create_engine('postgresql://postgres:SZQGiSAfvrxP1LYh@db.ibtturbotiqydypojvne.supabase.co:5432/postgres')
 
 schema_path = r'd:\marketboard\backend\schema.sql'
 with open(schema_path, 'r', encoding='utf-8') as f:
