@@ -22,15 +22,21 @@ try:
         
     print("[OK] Ket noi thanh cong ca 2 ben!")
     
-    # Get all tables in local database
-    with engine_local.connect() as conn:
-        result = conn.execute(text("""
-            SELECT table_name 
-            FROM information_schema.tables 
-            WHERE table_schema = 'public' 
-            AND table_type = 'BASE TABLE'
-        """))
-        tables = [row[0] for row in result]
+    # Danh sach cac bang THUC SU CAN THIET cho Dashboard va API (Da loai bo test_staging, raw data...)
+    tables = [
+        'agg_monthly_sales',
+        'agg_sellout_monthly',
+        'agg_product_sales',
+        'agg_npp_performance',
+        'visit',
+        'sellout',
+        'npp',
+        'product',
+        'saleteam',
+        'users',
+        'stores',
+        'kpitonghop'
+    ]
         
     print(f"\n[INFO] Tim thay {len(tables)} bang du lieu de dong bo.")
     
