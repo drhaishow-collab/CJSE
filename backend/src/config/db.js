@@ -9,6 +9,7 @@ const pool = new Pool({
   database: process.env.DB_DATABASE || (isVercel ? 'postgres' : 'sales_db'),
   password: process.env.DB_PASSWORD || (isVercel ? 'Coke@20152025' : '123456'),
   port: parseInt(process.env.DB_PORT || '5432', 10),
+  ssl: isVercel ? { rejectUnauthorized: false } : undefined,
 });
 
 let _isConnected = false;
