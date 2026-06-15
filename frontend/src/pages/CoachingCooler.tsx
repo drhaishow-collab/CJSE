@@ -18,7 +18,7 @@ const pseudoRandom = (seed: string) => {
   return ((t2 ^ t2 >>> 14) >>> 0) / 4294967296;
 };
 
-export const CoachingCooler: React.FC<CoachingCoolerProps> = ({ currentUser, defaultTab = 'coaching', usersList = [] }) => {
+export const CoachingCooler: React.FC<CoachingCoolerProps> = ({ defaultTab = 'coaching', usersList = [] }) => {
   const [activeTab, setActiveTab] = useState<'coaching' | 'cooler'>(defaultTab);
   const [filterRegion, setFilterRegion] = useState<string>('');
   const [filterChannel, setFilterChannel] = useState<string>('');
@@ -82,7 +82,7 @@ export const CoachingCooler: React.FC<CoachingCoolerProps> = ({ currentUser, def
     const regionsSet = new Set<string>();
 
     // Group reps by region -> supervisor
-    const map = new Map<string, Map<string, any[]>>();
+    const map = new Map<string, Map<string, { supervisor: string, code: string, reps: any[] }>>();
 
     usersList.forEach(user => {
       if (user.status === 'Ngừng Hoạt Động') return;
@@ -96,7 +96,7 @@ export const CoachingCooler: React.FC<CoachingCoolerProps> = ({ currentUser, def
       const supMap = map.get(reg)!;
       if (!supMap.has(supCode)) supMap.set(supCode, { supervisor: supName, code: supCode, reps: [] });
       
-      const supData = supMap.get(supCode);
+      const supData = supMap.get(supCode)!;
       
       // Gen mock score based on rep_code
       const rCode = user.rep_code || user.name;
@@ -339,7 +339,7 @@ export const CoachingCooler: React.FC<CoachingCoolerProps> = ({ currentUser, def
                             <tr>
                               <td colSpan={4} style={{ padding: 0, background: '#f8fafc' }}>
                                 <div style={{ padding: '12px 16px 16px 32px', animation: 'fadeIn 0.25s ease' }}>
-                                  {details.map(sup => (
+                                  {details.map((sup: any) => (
                                     <div key={sup.code} style={{ marginBottom: '16px' }}>
                                       <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px' }}>
                                         <span style={{ background: 'var(--cj-blue)', color: '#fff', padding: '2px 8px', borderRadius: '4px', fontSize: '0.7rem', fontWeight: 700 }}>GSBH</span>
@@ -361,7 +361,7 @@ export const CoachingCooler: React.FC<CoachingCoolerProps> = ({ currentUser, def
                                           </tr>
                                         </thead>
                                         <tbody>
-                                          {sup.reps.map(rep => (
+                                          {sup.reps.map((rep: any) => (
                                             <tr key={rep.code} style={{ borderBottom: '1px solid #e2e8f0' }}>
                                               <td style={{ padding: '6px 8px', fontWeight: 600 }}>{rep.name}</td>
                                               <td style={{ padding: '6px 8px', textAlign: 'center', color: '#64748b', fontSize: '0.72rem' }}>{rep.code}</td>
