@@ -879,13 +879,18 @@ app.post('/api/visits/:id/notes', async (req, res) => {
 
 // AUTH LOGIN
 app.post('/api/auth/login', async (req, res) => {
-  const { username } = req.body;
+  const { username, password } = req.body;
   try {
-    const data = await query('SELECT id, username, full_name, email, role, phone FROM users WHERE username = $1 AND active = true', [username]);
+    const data = await query('SELECT id, username, full_name, email, role, phone, password FROM users WHERE username = $1 AND active = true', [username]);
     if (data.rows.length === 0) {
       return res.status(401).json({ error: 'Invalid credentials' });
     }
     const user = data.rows[0];
+    
+    // Check password if provided in the request or if the user has a password in DB
+    if (password && user.password && password !== user.password) {
+      return res.status(401).json({ error: 'Sai mật khẩu' });
+    }
     res.json({
       id: user.id,
       username: user.username,

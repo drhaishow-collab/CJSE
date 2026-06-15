@@ -9,6 +9,7 @@ interface LoginProps {
 
 export const Login: React.FC<LoginProps> = ({ onLoginSuccess, apiUrl, staticMode = false, demoUser }) => {
   const [employeeCode, setEmployeeCode] = useState('');
+  const [password, setPassword] = useState('');
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
@@ -39,7 +40,7 @@ export const Login: React.FC<LoginProps> = ({ onLoginSuccess, apiUrl, staticMode
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ username: employeeCode.trim() }),
+        body: JSON.stringify({ username: employeeCode.trim(), password: password.trim() }),
       });
 
       const contentType = response.headers.get('content-type') || '';
@@ -65,6 +66,7 @@ export const Login: React.FC<LoginProps> = ({ onLoginSuccess, apiUrl, staticMode
 
   const handleQuickSelect = (code: string) => {
     setEmployeeCode(code);
+    setPassword('123456'); // Default password for demo
     setError(null);
   };
 
@@ -360,6 +362,24 @@ export const Login: React.FC<LoginProps> = ({ onLoginSuccess, apiUrl, staticMode
                 value={employeeCode}
                 onChange={(e) => setEmployeeCode(e.target.value)}
                 autoComplete="username"
+                required
+                disabled={loading}
+              />
+            </div>
+          </div>
+
+          <div className="form-group">
+            <label htmlFor="password" className="form-label">Mật khẩu</label>
+            <div className="input-wrapper">
+              <span className="input-icon">🔒</span>
+              <input
+                id="password"
+                type="password"
+                className="login-input"
+                placeholder="Nhập mật khẩu"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                autoComplete="current-password"
                 required
                 disabled={loading}
               />

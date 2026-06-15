@@ -34,7 +34,7 @@ const SNAPSHOT_SF_REPORT = snapshotData?.sf_report || STATIC_SF_REPORT;
 const SNAPSHOT_SF_TREND = snapshotData?.sf_trend || STATIC_SF_TREND;
 const SNAPSHOT_BIZ_REPORT = snapshotData?.biz_report || STATIC_BIZ_REPORT;
 
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001';
+const API_URL = import.meta.env.VITE_API_URL !== undefined ? import.meta.env.VITE_API_URL : 'http://localhost:3001';
 const STATIC_MODE = (import.meta.env.VITE_STATIC_MODE || 'true') === 'true';
 const HAS_SNAPSHOT = snapshotData?.generated_at != null;
 const CACHE_TTL = 5 * 60 * 1000; // 5 minutes
