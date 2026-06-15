@@ -5,9 +5,9 @@ const isVercel = process.env.VERCEL || process.env.NODE_ENV === 'production';
 
 const pool = new Pool({
   user: process.env.DB_USER || 'postgres',
-  host: process.env.DB_HOST || (isVercel ? 'db.ibtturbotiqydypojvne.supabase.co' : 'localhost'),
+  host: process.env.DB_HOST || (isVercel ? 'db.npeledlithnaolqgnuqq.supabase.co' : 'localhost'),
   database: process.env.DB_DATABASE || (isVercel ? 'postgres' : 'sales_db'),
-  password: process.env.DB_PASSWORD || (isVercel ? 'SZQGiSAfvrxP1LYh' : '123456'),
+  password: process.env.DB_PASSWORD || (isVercel ? 'Coke@20152025' : '123456'),
   port: parseInt(process.env.DB_PORT || '5432', 10),
 });
 
