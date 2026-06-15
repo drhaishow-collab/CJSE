@@ -28,7 +28,7 @@ app.get('/api/status', (req, res) => {
 // GET DASHBOARD - REAL DATA
 app.get('/api/dashboard', async (req, res) => {
   const { year, month , userRole, userCode} = req.query;
-  const authFilter = (userCode && userCode !== "SE") ? " AND (ten_vung ILIKE \'%Mekong%\' OR ten_vung ILIKE \'%MTAY%\' OR ten_vung ILIKE \'%Cần Thơ%\' OR ten_vung = \'Cần Thơ\')" : "";
+  const authFilter = (userCode && userCode !== "SE") ? " AND (ten_vung ILIKE '%Mekong%' OR ten_vung ILIKE '%MTAY%' OR ten_vung ILIKE '%Cần Thơ%' OR ten_vung = 'Cần Thơ')" : "";
   const now = new Date();
   const filterYear = year ? parseInt(year, 10) : now.getFullYear();
   const filterMonth = month ? parseInt(month, 10) : now.getMonth() + 1;
@@ -181,7 +181,7 @@ app.get('/api/users-management', async (req, res) => {
 app.get('/api/stores', async (req, res) => {
   try {
     const { year = '2026', month = '5', region , userRole, userCode} = req.query;
-  const authFilter = (userCode && userCode !== "SE") ? " AND (ten_vung ILIKE \'%Mekong%\' OR ten_vung ILIKE \'%MTAY%\' OR ten_vung ILIKE \'%Cần Thơ%\' OR ten_vung = \'Cần Thơ\')" : "";
+  const authFilter = (userCode && userCode !== "SE") ? " AND (ten_vung ILIKE '%Mekong%' OR ten_vung ILIKE '%MTAY%' OR ten_vung ILIKE '%Cần Thơ%' OR ten_vung = 'Cần Thơ')" : "";
     const filterRegion = region ? `AND ten_mien = '${region}'` : '';
 
     const storesData = await query(`
@@ -281,7 +281,7 @@ app.get('/api/visits', async (req, res) => {
 // PRODUCT REPORT - REAL DATA
 app.get('/api/reports/product', async (req, res) => {
   const { year, month, region, area , userRole, userCode} = req.query;
-  const authFilter = (userCode && userCode !== "SE") ? " AND (ten_vung ILIKE \'%Mekong%\' OR ten_vung ILIKE \'%MTAY%\' OR ten_vung ILIKE \'%Cần Thơ%\' OR ten_vung = \'Cần Thơ\')" : "";
+  const authFilter = (userCode && userCode !== "SE") ? " AND (ten_vung ILIKE '%Mekong%' OR ten_vung ILIKE '%MTAY%' OR ten_vung ILIKE '%Cần Thơ%' OR ten_vung = 'Cần Thơ')" : "";
   const filterYear = year ? parseInt(year, 10) : 2026;
   const filterMonth = month ? parseInt(month, 10) : 5;
 
@@ -344,7 +344,7 @@ app.get('/api/reports/product', async (req, res) => {
 // SF PERFORMANCE REPORT - ALL METRICS from fact_kpi + kpitonghop
 app.get('/api/reports/sf-performance', async (req, res) => {
   const { year, month, region, area , userRole, userCode} = req.query;
-  const authFilter = (userCode && userCode !== "SE") ? " AND (ten_vung ILIKE \'%Mekong%\' OR ten_vung ILIKE \'%MTAY%\' OR ten_vung ILIKE \'%Cần Thơ%\' OR ten_vung = \'Cần Thơ\')" : "";
+  const authFilter = (userCode && userCode !== "SE") ? " AND (ten_vung ILIKE '%Mekong%' OR ten_vung ILIKE '%MTAY%' OR ten_vung ILIKE '%Cần Thơ%' OR ten_vung = 'Cần Thơ')" : "";
   const filterYear = year ? parseInt(year, 10) : 2026;
   const filterMonth = month ? parseInt(month, 10) : 5;
 
@@ -532,7 +532,7 @@ app.get('/api/reports/sf-performance', async (req, res) => {
 // SF MONTHLY TREND
 app.get('/api/reports/sf-trend', async (req, res) => {
   const { year, month , userRole, userCode} = req.query;
-  const authFilter = (userCode && userCode !== "SE") ? " AND (ten_vung ILIKE \'%Mekong%\' OR ten_vung ILIKE \'%MTAY%\' OR ten_vung ILIKE \'%Cần Thơ%\' OR ten_vung = \'Cần Thơ\')" : "";
+  const authFilter = (userCode && userCode !== "SE") ? " AND (ten_vung ILIKE '%Mekong%' OR ten_vung ILIKE '%MTAY%' OR ten_vung ILIKE '%Cần Thơ%' OR ten_vung = 'Cần Thơ')" : "";
   const filterYear = year ? parseInt(year, 10) : 2026;
   const filterMonth = month ? parseInt(month, 10) : 5;
 
@@ -650,7 +650,7 @@ app.get('/api/reports/sf-trend', async (req, res) => {
 // BIZ REPORT - REAL DATA (returns rawData and kpis for Biz Review dashboard)
 app.get('/api/reports/biz', async (req, res) => {
   const { year, month, region, area , userRole, userCode} = req.query;
-  const authFilter = (userCode && userCode !== "SE") ? " AND (ten_vung ILIKE \'%Mekong%\' OR ten_vung ILIKE \'%MTAY%\' OR ten_vung ILIKE \'%Cần Thơ%\' OR ten_vung = \'Cần Thơ\')" : "";
+  const authFilter = (userCode && userCode !== "SE") ? " AND (ten_vung ILIKE '%Mekong%' OR ten_vung ILIKE '%MTAY%' OR ten_vung ILIKE '%Cần Thơ%' OR ten_vung = 'Cần Thơ')" : "";
   const selectedYear = year ? parseInt(year, 10) : 2026;
   const selectedMonth = month ? parseInt(month, 10) : 5;
   const prevYear = selectedYear - 1;
@@ -734,8 +734,8 @@ app.get('/api/reports/biz', async (req, res) => {
         CASE WHEN COUNT(DISTINCT ma_khach_hang) > 0 THEN (SUM(tong_doanh_so)::numeric / COUNT(DISTINCT ma_khach_hang)) ELSE 0 END as vpo
       FROM agg_sellout_monthly
       WHERE nam IN ($1, $2) AND thang::integer <= $3
-        ${region ? "AND ten_mien = \'" + region + "\'" : \'\'}
-        ${area ? "AND ten_vung = \'" + area + "\'" : \'\'}
+        ${region ? "AND ten_mien = '" + region + "'" : ''}
+        ${area ? "AND ten_vung = '" + area + "'" : ''}
         ${authFilter}
       GROUP BY nam, thang
       ORDER BY nam DESC, thang DESC
@@ -756,8 +756,8 @@ app.get('/api/reports/biz', async (req, res) => {
         COUNT(DISTINCT ma_nv) as total_nvbh
       FROM visit
       WHERE EXTRACT(YEAR FROM ngay) = $1 AND EXTRACT(MONTH FROM ngay) = $2
-        ${region ? "AND ten_mien = \'" + region + "\'" : \'\'}
-        ${area ? "AND ten_vung = \'" + area + "\'" : \'\'}
+        ${region ? "AND ten_mien = '" + region + "'" : ''}
+        ${area ? "AND ten_vung = '" + area + "'" : ''}
         ${authFilter}
     `, [selectedYear, selectedMonth]);
 
@@ -882,7 +882,7 @@ app.post('/api/auth/login', async (req, res) => {
 // GET USER PROFILE
 app.get('/api/users/profile', async (req, res) => {
   const { userId , userRole, userCode} = req.query;
-  const authFilter = (userCode && userCode !== "SE") ? " AND (ten_vung ILIKE \'%Mekong%\' OR ten_vung ILIKE \'%MTAY%\' OR ten_vung ILIKE \'%Cần Thơ%\' OR ten_vung = \'Cần Thơ\')" : "";
+  const authFilter = (userCode && userCode !== "SE") ? " AND (ten_vung ILIKE '%Mekong%' OR ten_vung ILIKE '%MTAY%' OR ten_vung ILIKE '%Cần Thơ%' OR ten_vung = 'Cần Thơ')" : "";
   try {
     const data = await query('SELECT id, username, full_name, email, role, phone FROM users WHERE id = $1', [userId]);
     if (data.rows.length === 0) {
