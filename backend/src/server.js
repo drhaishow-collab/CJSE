@@ -1,7 +1,7 @@
 require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
-const { query, isConnected, syncConnectionState, connectionReady } = require('./config/db');
+const { query, ensureDbConnectionState, getDbStatus } = require('./config/db');
 
 const app = express();
 const PORT = process.env.PORT || 3001;
@@ -9,49 +9,15 @@ const PORT = process.env.PORT || 3001;
 app.use(cors());
 app.use(express.json());
 
-let isDbConnected = false;
-let connectionInitialized = false;
-let connectionInitPromise = null;
-
-async function ensureDbConnectionState() {
-  if (!connectionInitPromise) {
-    connectionInitPromise = connectionReady
-      .then(async (connected) => {
-        isDbConnected = connected;
-        if (connected) {
-          await syncConnectionState();
-          isDbConnected = isConnected();
-          console.log('✅ Database connected!');
-        } else {
-          console.error('❌ Database NOT connected!');
-        }
-        connectionInitialized = true;
-        return isDbConnected;
-      })
-      .catch((err) => {
-        connectionInitialized = true;
-        isDbConnected = false;
-        console.error('DB connection error:', err.message);
-        return false;
-      });
-  }
-
-  const connected = await connectionInitPromise;
-
-  if (connectionInitialized) {
-    await syncConnectionState();
-    isDbConnected = isConnected();
-  }
-
-  return connected && isDbConnected;
-}
-
 app.use(async (req, res, next) => {
   const connected = await ensureDbConnectionState();
 
-  if (!connected && req.path !== '/api/health') {
+  if (!connected && req.path !== '/api/health' && req.path !== '/api/status') {
+    const dbStatus = getDbStatus();
     return res.status(503).json({
       error: 'Database not connected',
+      details: dbStatus.lastError,
+      host: dbStatus.host
     });
   }
 
@@ -60,7 +26,14 @@ app.use(async (req, res, next) => {
 
 // API STATUS
 app.get('/api/status', (req, res) => {
-  res.json({ status: 'ONLINE', database: isDbConnected ? 'CONNECTED' : 'NOT_CONNECTED', timestamp: new Date() });
+  const dbStatus = getDbStatus();
+  res.json({ 
+    status: 'ONLINE', 
+    database: dbStatus.isConnected ? 'CONNECTED' : 'NOT_CONNECTED', 
+    error: dbStatus.lastError,
+    host: dbStatus.host,
+    timestamp: new Date() 
+  });
 });
 
 // GET DASHBOARD - REAL DATA
