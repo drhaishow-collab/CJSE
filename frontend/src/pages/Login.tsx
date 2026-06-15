@@ -403,36 +403,21 @@ export const Login: React.FC<LoginProps> = ({ onLoginSuccess, apiUrl, staticMode
 
         {/* Demo Fast Account Switcher */}
         <div className="demo-box">
-          <div className="demo-title">Tài khoản dùng thử (Database Live)</div>
+          <div className="demo-title">Tài khoản dùng thử (Database Live) - Miền Tây (Cần Thơ)</div>
           <div className="demo-roles">
             <div className="demo-role-group">
-              <span className="role-label">💼 QL Vùng:</span>
-              <button className="demo-badge red" onClick={() => handleQuickSelect('CJ1407352')}>
-                Mai Xuân Ưu (CJ1407352)
+              <span className="role-label">💼 QL Vùng / ASM:</span>
+              <button className="demo-badge red" onClick={() => handleQuickSelect('dung_ql')}>
+                Phan Ngọc Dũng
+              </button>
+              <button className="demo-badge red" onClick={() => handleQuickSelect('phuong_asm')}>
+                Nguyễn Hoài Phương
               </button>
             </div>
             <div className="demo-role-group">
-              <span className="role-label">👥 Giám sát:</span>
-              <button className="demo-badge orange" onClick={() => handleQuickSelect('CJ1409311')}>
-                Nguyễn T. Đạt
-              </button>
-              <button className="demo-badge orange" onClick={() => handleQuickSelect('CJ1408801')}>
-                P. V. Việt
-              </button>
-            </div>
-            <div className="demo-role-group">
-              <span className="role-label">🛒 NVBH:</span>
-              <button className="demo-badge blue" onClick={() => handleQuickSelect('CJ1410048')}>
-                Lê T. Bích Nguyệt
-              </button>
-              <button className="demo-badge blue" onClick={() => handleQuickSelect('07009')}>
-                Nguyễn T. Tự (07009)
-              </button>
-            </div>
-            <div className="demo-role-group">
-              <span className="role-label">⚙️ Admin:</span>
-              <button className="demo-badge" onClick={() => handleQuickSelect('phuchai_sup')}>
-                Lê Phúc Hải
+              <span className="role-label">👥 Giám sát (SS):</span>
+              <button className="demo-badge orange" onClick={() => handleQuickSelect('vinh_ss')}>
+                Tô Bá Vinh
               </button>
             </div>
           </div>
