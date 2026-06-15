@@ -9,20 +9,9 @@ const PORT = process.env.PORT || 3001;
 app.use(cors());
 app.use(express.json());
 
-app.use(async (req, res, next) => {
-  const connected = await ensureDbConnectionState();
-
-  if (!connected && req.path !== '/api/health' && req.path !== '/api/status') {
-    const dbStatus = getDbStatus();
-    return res.status(503).json({
-      error: 'Database not connected',
-      details: dbStatus.lastError,
-      host: dbStatus.host
-    });
-  }
-
-  return next();
-});
+// Database connection is managed automatically by the pg pool.
+// We removed ensureDbConnectionState middleware here to prevent opening redundant connections on every API call,
+// which saves hundreds of milliseconds per request on Serverless environments.
 
 // API STATUS
 app.get('/api/status', (req, res) => {
