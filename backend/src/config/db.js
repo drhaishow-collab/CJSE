@@ -4,11 +4,11 @@ require('dotenv').config();
 const isVercel = process.env.VERCEL || process.env.NODE_ENV === 'production';
 
 const pool = new Pool({
-  user: process.env.DB_USER || 'postgres',
-  host: process.env.DB_HOST || (isVercel ? '2406:da12:1f1:f802:8e85:29f7:b77b:9aeb' : 'localhost'),
+  user: process.env.DB_USER || (isVercel ? 'postgres.npeledlithnaolqgnuqq' : 'postgres'),
+  host: process.env.DB_HOST || (isVercel ? 'aws-1-ap-northeast-2.pooler.supabase.com' : 'localhost'),
   database: process.env.DB_DATABASE || (isVercel ? 'postgres' : 'sales_db'),
   password: process.env.DB_PASSWORD || (isVercel ? 'Coke@20152025' : '123456'),
-  port: parseInt(process.env.DB_PORT || '5432', 10),
+  port: parseInt(process.env.DB_PORT || (isVercel ? '6543' : '5432'), 10),
   ssl: isVercel ? { rejectUnauthorized: false } : undefined,
 });
 
