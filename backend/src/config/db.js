@@ -5,7 +5,7 @@ const isVercel = process.env.VERCEL || process.env.NODE_ENV === 'production';
 
 const pool = new Pool({
   user: process.env.DB_USER || 'postgres',
-  host: process.env.DB_HOST || (isVercel ? 'db.npeledlithnaolqgnuqq.supabase.co' : 'localhost'),
+  host: process.env.DB_HOST || (isVercel ? '2406:da12:1f1:f802:8e85:29f7:b77b:9aeb' : 'localhost'),
   database: process.env.DB_DATABASE || (isVercel ? 'postgres' : 'sales_db'),
   password: process.env.DB_PASSWORD || (isVercel ? 'Coke@20152025' : '123456'),
   port: parseInt(process.env.DB_PORT || '5432', 10),
@@ -30,28 +30,31 @@ pool.on('error', () => {
   console.error('❌ Database connection error');
 });
 
-// Export a promise that resolves when connection is confirmed
-const connectionReady = pool.query('SELECT 1')
-  .then(() => { setConnected(true); return true; })
-  .catch((err) => {
-    setConnected(false);
-    console.error('❌ Database connection failed:', err.message);
-    return false;
-  });
+let _lastError = null;
+let _currentHost = pool.options.host;
 
-const syncConnectionState = async () => {
+const ensureDbConnectionState = async () => {
   try {
-    await pool.query('SELECT 1');
-    setConnected(true);
-  } catch (_) {
+    const client = await pool.connect();
+    client.release();
+    _isConnected = true;
+    _lastError = null;
+    return true;
+  } catch (error) {
+    console.error('Database connection error:', error.message);
     _isConnected = false;
+    _lastError = error.message;
+    return false;
   }
 };
 
+const getDbStatus = () => {
+  return { isConnected: _isConnected, lastError: _lastError, host: _currentHost };
+};
+
 module.exports = {
-  query: (text, params) => pool.query(text, params),
   pool,
-  isConnected: () => _isConnected,
-  syncConnectionState,
-  connectionReady,  // Promise that resolves when DB is confirmed connected
+  query: (text, params) => pool.query(text, params),
+  ensureDbConnectionState,
+  getDbStatus,
 };
